@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>load more</title>
+  <style type="text/css">
+  	ul {
+	  /*border: 1px blue solid;*/
+	  padding: 0 0;
+	}
+	.more {
+	  text-decoration: none;
+	  color: #e27272;
+	  border: 1px #e27272 solid;
+	  display: block;
+	  margin: 0 auto;
+	  width: 100px;
+	  height: 40px;
+	  line-height: 40px; 
+	  text-align: center;
+	  border-radius: 3px
+	}
+	div {
+	  /*border: 1px red solid;*/
+	}
+	li {
+	  display: block;
+	  list-style: none;
+	  height: 40px;
+	  line-height: 40px;
+	  border: 1px #ccc solid;
+	  padding: 0 10px;
+	  border-top: none;
+	}
+	li:first-child {
+		border-top: 1px #ccc solid;
+	}
+	li:hover {
+	  background-color: #008000;
+	  color: #fff;
+	  cursor: pointer;
+	}
+  </style>
+</head>
+<body>
+  <div>
+    <ul id='list'>
+    </ul>
+    <a class="more" href="#">查看更多</a>
+  </div>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script type="text/javascript">
+  	//1.发送请求（接口），传递参数
+  	//2.处理接口，返回数据
+  	//3.拿到数据，拼接html，加到页面上
+  	var index = 0;
+  	var length = 5;
+  	var lock = true;
+  
+  		$('.more').click(function(){
+  			if(lock){
+  				lock = false;
+		  		console.log('1')
+		  		$.ajax({
+			  		url: '/loadMore',
+			  		method: 'get',
+			  		dataType: 'json',
+			  		data: {
+			  			index: index,
+			  			length: length
+			  		}
+			  	}).done(function(ret){
+			  		if(ret.status === 1){
+			  			console.log('2')
+				  		var html = '';
+				  		for(i=0; i < ret.data.length; i++){
+				  			html += `<li>${ret.data[i]}</li>`
+				  		}
+				  		console.log(html)
+				  		$('#list').append(html)
+				  		index += 5
+				  		lock = true
+			  		}else{
+			  			alert ("数据异常");
+			  		}
+			  	}).fail(function(){
+			  		alert('系统异常')
+			  	})
+  			}
+	  	})
+  	
+  	
+  	
+  </script>
+</body>
+</html>
